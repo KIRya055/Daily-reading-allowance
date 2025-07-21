@@ -189,7 +189,7 @@ def specify_deadline():
         print('Некорректный ввод!\n\n')
     cls()
     while True:
-        print('Теперь нужно ввести дату окончания чтения.')
+        print('Теперь нужно ввести дату окончания чтения (этот день входит в период чтения).')
         print('Вводить нужно по следующему шаблону:')
         print('\nдень:месяц:год\n')
         print('Год нужно указывать в четырёхзначном виде.\n\n')
@@ -274,6 +274,7 @@ if not os.path.exists(name_deadline_file):
 daysF = open(name_deadline_file, 'r+')
 if daysF.read(1) == '':
     print('Не указан срок прочтения.\n\n')
+    daysF.seek(0, 0)
     daysF.writelines(specify_deadline())
     daysF.truncate()
 
@@ -287,6 +288,7 @@ while True:
         comm = int(comm)
         cls()
         if comm == 2:
+            daysF.seek(0, 0)
             daysF.writelines(specify_deadline())
             daysF.truncate()
         else:
@@ -299,7 +301,7 @@ daysF.seek(0)
 tmp = daysF.readlines()
 start_day = datetime.datetime.strptime(tmp[0][:-1:], '%d:%m:%Y')
 end_date = datetime.datetime.strptime(tmp[1][:-1:], '%d:%m:%Y')
-remaining_days = int((end_date - start_day).days)
+remaining_days = (end_date - start_day).days + 1
 all_pages = 0
 tmp = len(booksL)
 for book in booksL:
